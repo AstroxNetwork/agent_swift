@@ -32,7 +32,7 @@ public class Principal: Equatable {
     static public func from(_ other: Any) throws -> Principal {
         if let str = other as? String {
             return try Principal.fromText(str)
-        } else if let map = other as? NSDictionary, (map["_isPrincipal"] != nil) == true, let value = map["_arr"] as? [UInt8] {
+        } else if let map = other as? NSDictionary, let isPrincipal = map["_isPrincipal"] as? Bool, isPrincipal == true, let value = map["_arr"] as? [UInt8] {
             return Principal(value)
         } else if let principal = other as? Principal {
             return Principal(principal.array)
