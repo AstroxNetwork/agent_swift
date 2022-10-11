@@ -8,12 +8,13 @@
 import Foundation
 import CryptoSwift
 import SwiftBase32
+import SwiftCBOR
 
 let kSuffixSelfAuthenticating = UInt8(2)
 let kSuffixAnonymous = UInt8(4)
 
-public class Principal: Equatable {
-    let array : [UInt8]
+public class Principal: CBOREncodable, Equatable {
+    private var array : [UInt8]
     
     init(_ array: [UInt8]) {
         self.array = array
@@ -41,7 +42,7 @@ public class Principal: Equatable {
     }
     
     static public func fromHex(_ hex: String) -> Principal {
-        return Principal(fromHexString(hex))
+        return Principal(hex.toUInt8List())
     }
     
     static public func fromText(_ text: String) throws -> Principal {
@@ -50,7 +51,7 @@ public class Principal: Equatable {
             with: ""
         )
         let array = base32Decode(canisterIdNoDash)!
-        let slicedArray = Array(array[1...array.count - 4])
+        let slicedArray = Array(array[4...array.count - 1])
         let principal = Principal(slicedArray)
         let newText = principal.toText()
         if (newText != text) {
@@ -60,27 +61,39 @@ public class Principal: Equatable {
     }
     
     public var isAnonymous: Bool {
-        return array.count == 1 && array[0] == kSuffixAnonymous
+        return self.array.count == 1 && self.array[0] == kSuffixAnonymous
     }
     
     public func toUint8Array() -> [UInt8] {
-        return array
+        return self.array
+    }
+    
+    // MARK: - Encode Principals to CBOR value.
+    public func encode(options: CBOROptions) -> [UInt8] {
+        return self.toUint8Array()
     }
     
     public func toHex() -> String {
-        return toHexString(array).uppercased()
+        return self.array.toHexString().uppercased()
     }
     
     public func toText() -> String {
-        var checksumArrayBuffer = Data([UInt8](repeating: UInt8(0), count: 4))
-        checksumArrayBuffer[0] = UInt8(checksumArrayBuffer.bytes.crc32())
-        let checksum = checksumArrayBuffer.bytes
+        var crc = self.array.crc32()
+        let checksumArrayBuffer = Data(bytes: &crc, count: MemoryLayout<UInt32>.size)
+        let checksum = checksumArrayBuffer.bytes.reversed()
         let array = checksum + self.array
-        let result = base32Encode(array)
-        let range = NSRange(location: 0, length: result.utf16.count)
+        var encoded = base32Encode(array).lowercased()
+        encoded.removeAll(where: { "=".contains($0) })
+        let range = NSRange(location: 0, length: encoded.utf16.count)
         let reg = try! NSRegularExpression(pattern: ".{1,5}")
-        let matches = reg.matches(in: result, options: [], range: range)
-        return matches.map{ "\($0)" }.joined(separator: "-")
+        let matches = reg.matches(in: encoded, options: [], range: range)
+        var resultList = [String]()
+        for match in matches {
+            let str = encoded.substring(with: match.range)!.lowercased()
+            resultList.append(str)
+        }
+        let result = resultList.joined(separator: "-")
+        return result
     }
     
     public func toAccountId(subAccount: [UInt8]?) throws -> [UInt8] {
@@ -110,16 +123,27 @@ public class Principal: Equatable {
     public var description: String { return toText() }
 }
 
-func fromHexString(_ hexString: String) -> [UInt8] {
-    let range = NSRange(location: 0, length: hexString.utf16.count)
-    let reg = try! NSRegularExpression(pattern: ".{1,2}")
-    let matches = reg.matches(in: hexString, options: [], range: range)
-    let list = matches.map{ UInt8(Int("\($0)", radix: 16)!) }
-    return list
+extension String {
+    func toUInt8List() -> [UInt8] {
+        let range = NSRange(location: 0, length: self.utf16.count)
+        let reg = try! NSRegularExpression(pattern: ".{1,2}")
+        let matches = reg.matches(in: self, options: [], range: range)
+        let list = matches.map{ UInt8("\($0)", radix: 16)! }
+        return list
+    }
 }
 
-func toHexString(_ bytes: [UInt8]) -> String {
-    return bytes.reduce("") {
-        $0 + String($1, radix: 16).padding(toLength: 2, withPad: "0", startingAt: 0)
+extension Array where Element == UInt8 {
+    func toHexString() -> String {
+        return self.reduce("") {
+            $0 + String($1, radix: 16).padding(toLength: 2, withPad: "0", startingAt: 0)
+        }
+    }
+}
+
+private extension String {
+    func substring(with range: NSRange) -> Substring? {
+        guard let r = Range(range, in: self) else { return nil }
+        return self[r]
     }
 }

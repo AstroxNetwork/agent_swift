@@ -15,6 +15,7 @@
 		607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDE1AFB9204008FA782 /* LaunchScreen.xib */; };
 		607FACEC1AFB9204008FA782 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACEB1AFB9204008FA782 /* Tests.swift */; };
 		6C69F94DC8E82EE411DC1F28 /* Pods_AgentSwift_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 411DBC6C9B6B2EB70F9FB4CB /* Pods_AgentSwift_Example.framework */; };
+		FAC78F8728ED66CA000C2656 /* Principal.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAC78F8628ED66CA000C2656 /* Principal.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -46,6 +47,7 @@
 		A3CE05E12C1852F6FDCC1028 /* AgentSwift.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = AgentSwift.podspec; path = ../AgentSwift.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		B283CFCD811CB8F193DE3E6A /* Pods-AgentSwift_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AgentSwift_Tests.debug.xcconfig"; path = "Target Support Files/Pods-AgentSwift_Tests/Pods-AgentSwift_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		D9F706BAD09EDC2C8831AFE6 /* Pods-AgentSwift_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AgentSwift_Tests.release.xcconfig"; path = "Target Support Files/Pods-AgentSwift_Tests/Pods-AgentSwift_Tests.release.xcconfig"; sourceTree = "<group>"; };
+		FAC78F8628ED66CA000C2656 /* Principal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Principal.swift; sourceTree = "<group>"; };
 		FCB6789761624851EFFA6F1A /* Pods_AgentSwift_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AgentSwift_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -115,6 +117,7 @@
 		607FACE81AFB9204008FA782 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				FAC78F8528ED66A0000C2656 /* Principal */,
 				607FACEB1AFB9204008FA782 /* Tests.swift */,
 				607FACE91AFB9204008FA782 /* Supporting Files */,
 			);
@@ -148,6 +151,14 @@
 				D9F706BAD09EDC2C8831AFE6 /* Pods-AgentSwift_Tests.release.xcconfig */,
 			);
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		FAC78F8528ED66A0000C2656 /* Principal */ = {
+			isa = PBXGroup;
+			children = (
+				FAC78F8628ED66CA000C2656 /* Principal.swift */,
+			);
+			path = Principal;
 			sourceTree = "<group>";
 		};
 		FFDFFAD1AE3D042CC1A2331F /* Frameworks */ = {
@@ -294,12 +305,14 @@
 				"${BUILT_PRODUCTS_DIR}/AgentSwift/AgentSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/CryptoSwift/CryptoSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/SwiftBase32/SwiftBase32.framework",
+				"${BUILT_PRODUCTS_DIR}/SwiftCBOR/SwiftCBOR.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AgentSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CryptoSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftBase32.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftCBOR.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -344,6 +357,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FAC78F8728ED66CA000C2656 /* Principal.swift in Sources */,
 				607FACEC1AFB9204008FA782 /* Tests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

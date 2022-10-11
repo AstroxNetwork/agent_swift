@@ -40,4 +40,5 @@ TODO: Add long description of the pod here.
   # s.frameworks = 'UIKit', 'MapKit'
   s.dependency 'CryptoSwift', '~> 1.4.1'
   s.dependency 'SwiftBase32', '~> 0.9.0'
+  s.dependency 'SwiftCBOR', '~> 0.4.5'
 end
